@@ -1,10 +1,14 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
+using WalletApp.BLL.Dtos.TransactionDtos;
 using WalletApp.Common.Enums;
+using WalletApp.Common.Mapping;
 
 namespace WalletApp.WebApi.Requests;
 
-public class TransactionAddRequest
+public class TransactionAddRequest : IMapTo<TransactionAddDto>
 {
+    public Guid UserId { get; set; }
     public string Name { get; set; } = null!;
     public decimal Sum { get; set; }
     public string Description { get; set; } = null!;
@@ -16,6 +20,9 @@ public class TransactionAddRequest
     {
         public Validator()
         {
+            RuleFor(x => x.UserId)
+                .NotEmpty();
+
             RuleFor(x => x.Name)
                 .NotEmpty();
 

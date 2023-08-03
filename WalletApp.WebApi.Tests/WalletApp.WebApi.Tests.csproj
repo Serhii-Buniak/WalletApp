@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="NUnit" Version="3.13.3" />
@@ -20,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WalletApp.BLL\WalletApp.BLL.csproj" />
+    <ProjectReference Include="..\WalletApp.Tests.Helpers\WalletApp.Tests.Helpers.csproj" />
     <ProjectReference Include="..\WalletApp.WebApi\WalletApp.WebApi.csproj" />
   </ItemGroup>
 

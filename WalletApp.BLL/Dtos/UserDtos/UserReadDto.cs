@@ -1,7 +1,10 @@
-﻿namespace WalletApp.BLL.Dtos.UserDtos;
+﻿using WalletApp.Common.Mapping;
+using WalletApp.DAL.Entities.Identity;
 
-public class UserReadDto
+namespace WalletApp.BLL.Dtos.UserDtos;
+
+public class UserReadDto : IMapFrom<AppUser>
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
+    public string UserName { get; set; } = null!;
 }

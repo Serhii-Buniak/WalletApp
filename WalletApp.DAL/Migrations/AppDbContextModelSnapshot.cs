@@ -125,6 +125,56 @@ namespace WalletApp.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("WalletApp.DAL.Entities.CardBalance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("CardBalances");
+                });
+
+            modelBuilder.Entity("WalletApp.DAL.Entities.DailyPoint", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("DailyPoints");
+                });
+
             modelBuilder.Entity("WalletApp.DAL.Entities.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -165,6 +215,9 @@ namespace WalletApp.DAL.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -177,10 +230,6 @@ namespace WalletApp.DAL.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -219,6 +268,28 @@ namespace WalletApp.DAL.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("WalletApp.DAL.Entities.PaymentDue", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("PaymentDues");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -269,6 +340,51 @@ namespace WalletApp.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WalletApp.DAL.Entities.CardBalance", b =>
+                {
+                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
+                        .WithOne("CardBalance")
+                        .HasForeignKey("WalletApp.DAL.Entities.CardBalance", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WalletApp.DAL.Entities.DailyPoint", b =>
+                {
+                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
+                        .WithOne("DailyPoint")
+                        .HasForeignKey("WalletApp.DAL.Entities.DailyPoint", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WalletApp.DAL.Entities.PaymentDue", b =>
+                {
+                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
+                        .WithOne("PaymentDue")
+                        .HasForeignKey("WalletApp.DAL.Entities.PaymentDue", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WalletApp.DAL.Entities.Identity.AppUser", b =>
+                {
+                    b.Navigation("CardBalance")
+                        .IsRequired();
+
+                    b.Navigation("DailyPoint")
+                        .IsRequired();
+
+                    b.Navigation("PaymentDue")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

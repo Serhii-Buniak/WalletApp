@@ -3,17 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletApp.WebApi", "WalletApp.WebApi\WalletApp.WebApi.csproj", "{352892E1-B8DD-4A15-AEAD-9AB2483833BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.WebApi", "WalletApp.WebApi\WalletApp.WebApi.csproj", "{352892E1-B8DD-4A15-AEAD-9AB2483833BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletApp.BLL", "WalletApp.BLL\WalletApp.BLL.csproj", "{1B51D585-7CE1-4EFC-AAFC-25F8ED8E841E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.BLL", "WalletApp.BLL\WalletApp.BLL.csproj", "{1B51D585-7CE1-4EFC-AAFC-25F8ED8E841E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletApp.DAL", "WalletApp.DAL\WalletApp.DAL.csproj", "{82178ECF-3884-418A-8F95-A3A89E731E71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.DAL", "WalletApp.DAL\WalletApp.DAL.csproj", "{82178ECF-3884-418A-8F95-A3A89E731E71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletApp.Common", "WalletApp.Common\WalletApp.Common.csproj", "{7F3650AE-A49D-40A1-BBC3-A9AAB0CF7530}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.Common", "WalletApp.Common\WalletApp.Common.csproj", "{7F3650AE-A49D-40A1-BBC3-A9AAB0CF7530}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{714987D3-5F65-4B02-A342-E34FAE03CEC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletApp.WebApi.Tests", "WalletApp.WebApi.Tests\WalletApp.WebApi.Tests.csproj", "{1DD8A83C-C784-44EF-B309-C5786F477476}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.WebApi.Tests", "WalletApp.WebApi.Tests\WalletApp.WebApi.Tests.csproj", "{1DD8A83C-C784-44EF-B309-C5786F477476}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.BLL.Tests", "WalletApp.BLL.Tests\WalletApp.BLL.Tests.csproj", "{84D5EBDC-5674-4B57-9753-FC4879CE304F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletApp.Tests.Helpers", "WalletApp.Tests.Helpers\WalletApp.Tests.Helpers.csproj", "{FF54BF22-F62C-480D-BF12-D22015D19D66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +45,22 @@ Global
 		{1DD8A83C-C784-44EF-B309-C5786F477476}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DD8A83C-C784-44EF-B309-C5786F477476}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DD8A83C-C784-44EF-B309-C5786F477476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D5EBDC-5674-4B57-9753-FC4879CE304F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D5EBDC-5674-4B57-9753-FC4879CE304F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D5EBDC-5674-4B57-9753-FC4879CE304F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D5EBDC-5674-4B57-9753-FC4879CE304F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF54BF22-F62C-480D-BF12-D22015D19D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF54BF22-F62C-480D-BF12-D22015D19D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF54BF22-F62C-480D-BF12-D22015D19D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF54BF22-F62C-480D-BF12-D22015D19D66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1DD8A83C-C784-44EF-B309-C5786F477476} = {714987D3-5F65-4B02-A342-E34FAE03CEC1}
+		{84D5EBDC-5674-4B57-9753-FC4879CE304F} = {714987D3-5F65-4B02-A342-E34FAE03CEC1}
+		{FF54BF22-F62C-480D-BF12-D22015D19D66} = {714987D3-5F65-4B02-A342-E34FAE03CEC1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F679A1EB-2A60-41C0-AA07-7DF0FE9ECB9A}

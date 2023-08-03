@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using AutoMapper;
+using AutoMapper.Internal;
+using WalletApp.WebApi.Common.Extensions;
 
 namespace WalletApp.Common.Mapping;
 
@@ -7,16 +9,26 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        foreach (var assembly in AppDomain.CurrentDomain.GetAppAssemblies())
+        {
+            ApplyMappingsFromAssembly(assembly);
+        }
     }
 
     private void ApplyMappingsFromAssembly(Assembly assembly)
     {
-        var mapFromType = typeof(IMapFrom<>);
+        Type simpleMapFromType = typeof(IMap);
+        List<Type> genericMapsFromTypes = new()
+        {
+            typeof(IMapFrom<>),
+            typeof(IMapTo<>),
+            typeof(IMapFromAndTo<>),
+        };
 
         var mappingMethodName = nameof(IMapFrom<object>.Mapping);
 
-        bool HasInterface(Type t) => t.IsGenericType && t.GetGenericTypeDefinition() == mapFromType;
+        bool HasInterface(Type t) => t == simpleMapFromType || 
+            t.IsGenericType &&  genericMapsFromTypes.Contains(t.GetGenericTypeDefinition());
 
         var types = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Any(HasInterface)).ToList();
 

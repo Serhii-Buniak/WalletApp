@@ -1,70 +1,53 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WalletApp.BLL.Dtos.TransactionDtos;
 using WalletApp.BLL.Services.Interfaces;
 using WalletApp.Common.Exceptions;
+using WalletApp.Common.Pagination;
+using WalletApp.Tests.TestHelpers;
 using WalletApp.WebApi.Controllers;
+using WalletApp.WebApi.Requests;
 using WalletApp.WebApi.Responses;
-using WalletApp.WebApi.Tests.TestHelpers;
 
 namespace WalletApp.WebApi.Tests.Controllers;
 
 internal class TransactionControllerTests
 {
     private Mock<ITransactionService> _transactionSrv;
-    private TransactionController _controller;
+    private Mock<IMapper> _mapper;
+    private TransactionsController _controller;
 
     [SetUp]
     public void Setup()
     {
         _transactionSrv = new Mock<ITransactionService>();
+        _mapper = new Mock<IMapper>();
 
-
-        _controller = new TransactionController(_transactionSrv.Object);
+        _controller = new TransactionsController(_transactionSrv.Object, _mapper.Object);
     }
 
     [Test]
     public async Task GetAllAsync_Success_ReturnOkObjectResult()
     {
         _transactionSrv
-            .Setup(t => t.GetAllAsync())
+            .Setup(t => t.GetAllAsync(It.IsAny<PageParameters>()))
             .ReturnsAsync(TransactionTestHelper.GetTransactionReadDtos());
 
-        IActionResult result = await _controller.GetAllAsync();
+        IActionResult result = await _controller.GetAllAsync(It.IsAny<PageParameters>());
 
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-    }    
-    
-    [Test]
-    public async Task GetAllAsync_Success_ReturnTransactionReadDtos()
-    {
-        _transactionSrv
-            .Setup(t => t.GetAllAsync())
-            .ReturnsAsync(TransactionTestHelper.GetTransactionReadDtos());
-
-        IActionResult result = await _controller.GetAllAsync();
-       
         var okObjectResult = result as OkObjectResult;
 
         var transactionReadDtos = okObjectResult?.Value as IEnumerable<TransactionReadDto>;
 
-        Assert.That(transactionReadDtos?.Count(), Is.EqualTo(TransactionTestHelper.GetTransactionReadDtos().Count()));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(transactionReadDtos?.Count(), Is.EqualTo(TransactionTestHelper.GetTransactionReadDtos().Count()));
+        });
     }
-    
+
     [Test]
     public async Task GetOneAsync_Success_ReturnOkObjectResult()
-    {
-        _transactionSrv
-            .Setup(t => t.GetByIdAsync(It.IsAny<long>()))
-            .ReturnsAsync(TransactionTestHelper.GetTransactionReadDto());
-
-        IActionResult result = await _controller.GetOneAsync(It.IsAny<long>());
-
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-    }    
-    
-    [Test]
-    public async Task GetOneAsync_Success_ReturnTransactionReadDto()
     {
         _transactionSrv
             .Setup(t => t.GetByIdAsync(It.IsAny<long>()))
@@ -76,7 +59,11 @@ internal class TransactionControllerTests
 
         var transactionReadDto = okObjectResult?.Value as TransactionReadDto;
 
-        Assert.That(transactionReadDto?.Id, Is.EqualTo(TransactionTestHelper.GetTransactionReadDto().Id));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(transactionReadDto?.Id, Is.EqualTo(TransactionTestHelper.GetTransactionReadDto().Id));
+        });
     }
 
     [Test]
@@ -88,23 +75,91 @@ internal class TransactionControllerTests
 
         IActionResult result = await _controller.GetOneAsync(It.IsAny<long>());
 
-        Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
-    }   
+        var notFoundObjectResult = result as NotFoundObjectResult;
+
+        var notFoundResponse = notFoundObjectResult?.Value as ErrorResponse;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(notFoundResponse?.Error, Is.EqualTo("ex message"));
+        });
+    }
+
+    [Test]
+    public async Task AddAsync_Success_ReturnOkObjectResult()
+    {
+        _mapper
+            .Setup(t => t.Map<TransactionAddDto>(It.IsAny<TransactionAddRequest>()))
+            .Returns(TransactionTestHelper.GetTransactionAddDto());
+
+        _transactionSrv
+            .Setup(t => t.AddAsync(It.IsAny<TransactionAddDto>()))
+            .ReturnsAsync(TransactionTestHelper.GetTransactionReadDto());
+
+        _controller.ControllerContext = new ControllerContextBuilder().Build();
+
+        IActionResult result = await _controller.AddAsync(It.IsAny<TransactionAddRequest>());
+
+        var okObjectResult = result as OkObjectResult;
+
+        var transactionReadDto = okObjectResult?.Value as TransactionReadDto;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(transactionReadDto?.Id, Is.EqualTo(TransactionTestHelper.GetTransactionReadDto().Id));
+        });
+    }
+
+    [Test]
+    public async Task AddAsync_SuccessIsAuthenticated_ReturnUserNameIsNotNull()
+    {
+        TransactionAddDto transactionAddDto = new();
+        _mapper
+            .Setup(t => t.Map<TransactionAddDto>(It.IsAny<TransactionAddRequest>()))
+            .Returns(transactionAddDto);
+
+        _transactionSrv
+            .Setup(t => t.AddAsync(It.IsAny<TransactionAddDto>()))
+            .ReturnsAsync(() => TransactionTestHelper.GetTransactionReadDtoFromAdd(transactionAddDto));
+
+        _controller.ControllerContext = new ControllerContextBuilder("TestAuthenticationType")
+            .WithDefaultIdentityClaims().Build();
+
+        IActionResult result = await _controller.AddAsync(It.IsAny<TransactionAddRequest>());
+
+        var okObjectResult = result as OkObjectResult;
+
+        var transactionReadDto = okObjectResult?.Value as TransactionReadDto;
+
+        var username = transactionReadDto?.SenderName;
+
+        Assert.That(username, Is.Not.Null);
+    }    
     
     [Test]
-    public async Task GetOneAsync_NotFound_ReturnExMessage()
+    public async Task AddAsync_SuccessIsNotAuthenticated_ReturnUserNameIsNull()
     {
+        TransactionAddDto transactionAddDto = new();
+        _mapper
+            .Setup(t => t.Map<TransactionAddDto>(It.IsAny<TransactionAddRequest>()))
+            .Returns(transactionAddDto);
+
         _transactionSrv
-            .Setup(t => t.GetByIdAsync(It.IsAny<long>()))
-            .ThrowsAsync(new NotFoundException("ex message"));
+            .Setup(t => t.AddAsync(It.IsAny<TransactionAddDto>()))
+            .ReturnsAsync(() => TransactionTestHelper.GetTransactionReadDtoFromAdd(transactionAddDto));
 
-        IActionResult result = await _controller.GetOneAsync(It.IsAny<long>());
+        _controller.ControllerContext = new ControllerContextBuilder().Build();
 
-        var okObjectResult = result as NotFoundObjectResult;
+        IActionResult result = await _controller.AddAsync(It.IsAny<TransactionAddRequest>());
 
-        var notFoundResponse = okObjectResult?.Value as NotFoundResponse;
+        var okObjectResult = result as OkObjectResult;
 
+        var transactionReadDto = okObjectResult?.Value as TransactionReadDto;
 
-        Assert.That(notFoundResponse?.Error, Is.EqualTo("ex message"));
+        var username = transactionReadDto?.SenderName;
+
+        Assert.That(username, Is.Null);
     }
 }

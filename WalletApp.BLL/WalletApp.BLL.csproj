@@ -8,7 +8,9 @@
 
   <ItemGroup>
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
     <ProjectReference Include="..\WalletApp.Common\WalletApp.Common.csproj" />
+    <ProjectReference Include="..\WalletApp.DAL\WalletApp.DAL.csproj" />
   </ItemGroup>
 
 </Project>

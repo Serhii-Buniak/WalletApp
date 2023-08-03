@@ -1,4 +1,6 @@
-﻿namespace WalletApp.Common.Exceptions;
+﻿using System.Runtime.Serialization;
+
+namespace WalletApp.Common.Exceptions;
 
 public class NotFoundException : Exception
 {
