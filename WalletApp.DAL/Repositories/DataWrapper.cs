@@ -71,7 +71,7 @@ public class DataWrapper : IDataWrapper, IDisposable
     public async Task<int> SaveAsync()
     {
         return await Context.SaveChangesAsync();
-    }
+        }
 
     private bool disposed = false;
 

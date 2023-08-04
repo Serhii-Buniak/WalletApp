@@ -14,15 +14,6 @@ public class DailyPointService : BaseEntityService, IDailyPointService
 
     }
 
-    public async Task<IEnumerable<DailyPointReadDto>> GetAllAsync()
-    {
-        IEnumerable<DailyPoint> dailyPoints = await Data.DailyPoints.GetAllAsync();
-
-        var dailyPointReadDtos = Mapper.Map<IEnumerable<DailyPointReadDto>>(dailyPoints);
-
-        return dailyPointReadDtos;
-    }
-
     public async Task<DailyPointReadDto> GetByIdAsync(long id)
     {
         DailyPoint? dailyPoint = await Data.DailyPoints.GetByIdOrDefaultAsync(id);

@@ -17,14 +17,6 @@ public class CardBalancesController : ControllerBase
         _cardBalanceSrv = cardBalanceService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        IEnumerable<CardBalanceReadDto> cardBalanceReads = await _cardBalanceSrv.GetAllAsync();
-        return Ok(cardBalanceReads);
-
-    }
-
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {

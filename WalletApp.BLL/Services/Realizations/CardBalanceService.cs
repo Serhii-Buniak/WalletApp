@@ -29,12 +29,4 @@ public class CardBalanceService : BaseEntityService, ICardBalanceService
         return cardBalanceReadDto;
     }
 
-    public async Task<IEnumerable<CardBalanceReadDto>> GetAllAsync()
-    {
-        IEnumerable<CardBalance> cardBalances = await Data.CardBalances.GetAllAsync();
-
-        var cardBalanceReadDtos = Mapper.Map<IEnumerable<CardBalanceReadDto>>(cardBalances);
-
-        return cardBalanceReadDtos;
-    }
 }

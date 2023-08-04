@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using WalletApp.BLL.Dtos.CardBalanceDtos;
 using WalletApp.BLL.Dtos.DailyPointDtos;
 using WalletApp.BLL.Dtos.PaymentDueDtos;
+using WalletApp.BLL.Dtos.TransactionDtos;
 using WalletApp.BLL.Dtos.UserDtos;
 using WalletApp.BLL.Services.Interfaces;
 using WalletApp.Common.Exceptions;
+using WalletApp.Common.Pagination;
 using WalletApp.DAL.Entities;
 using WalletApp.DAL.Entities.Identity;
 using WalletApp.DAL.Repositories;
@@ -87,5 +89,33 @@ public class UserService : BaseEntityService, IUserService
         var dailyPointReadDto = Mapper.Map<DailyPointReadDto>(appUser.DailyPoint);
 
         return dailyPointReadDto;
+    }
+
+    public async Task<PagedList<TransactionReadDto>> GetTransactionReadDtosPageAsync(Guid userId, PageParameters pageParameters)
+    {
+        bool exist = await Data.Users.ContainsByIdAsync(userId);
+
+        if (!exist)
+        {
+            throw new NotFoundException(nameof(AppUser), userId);
+        }
+
+
+        PagedList<Transaction> transactionsPage = await Data.Transactions.GetPageAsync(pageParameters,
+             predicate: t => t.UserId == userId,
+             include: x => x.Include(t => t.User)
+                            .Include(t => t.Sender!));
+
+        if (transactionsPage.CurrentPage > transactionsPage.TotalPages)
+        {
+            throw new NotFoundException(nameof(PagedList<Transaction>), transactionsPage.CurrentPage);
+        }
+
+        var transactionReadDtos = Mapper.Map<List<TransactionReadDto>>(transactionsPage);
+
+        var transactionReadDtosPage = transactionsPage.Create(transactionReadDtos);
+
+        return transactionReadDtosPage;
+
     }
 }

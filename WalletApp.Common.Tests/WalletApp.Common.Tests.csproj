@@ -19,9 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WalletApp.BLL\WalletApp.BLL.csproj" />
-    <ProjectReference Include="..\WalletApp.Tests.Helpers\WalletApp.Tests.Helpers.csproj" />
-    <ProjectReference Include="..\WalletApp.WebApi\WalletApp.WebApi.csproj" />
+    <ProjectReference Include="..\WalletApp.Common\WalletApp.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,4 +13,13 @@ public class UsersRepository : GenericRepository<AppUser, Guid>, IUsersRepositor
     {
     }
 
+    public async Task<IEnumerable<AppUser>> GetAllAsync()
+    {
+        return await base.GetAllAsync();
+    }
+
+    public async Task<AppUser?> GetByIdOrDefaultAsync(Guid id, Func<IQueryable<AppUser>, IIncludableQueryable<AppUser, object>>? include = null)
+    {
+       return await base.GetByIdOrDefaultAsync(id, include: include);
+    }
 }

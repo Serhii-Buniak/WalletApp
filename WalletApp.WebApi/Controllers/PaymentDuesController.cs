@@ -18,14 +18,6 @@ public class PaymentDuesController : ControllerBase
         _paymentDueSrv = paymentDueSrv;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        IEnumerable<PaymentDueReadDto> paymentDueReadDtos = await _paymentDueSrv.GetAllAsync();
-        return Ok(paymentDueReadDtos);
-
-    }
-
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {

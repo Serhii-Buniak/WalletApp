@@ -14,15 +14,6 @@ public class PaymentDueService : BaseEntityService, IPaymentDueService
 
     }
 
-    public async Task<IEnumerable<PaymentDueReadDto>> GetAllAsync()
-    {
-        IEnumerable<PaymentDue> paymentDues = await Data.PaymentDues.GetAllAsync();
-
-        var paymentDueReadDtos = Mapper.Map<IEnumerable<PaymentDueReadDto>>(paymentDues);
-
-        return paymentDueReadDtos;
-    }
-
     public async Task<PaymentDueReadDto> GetByIdAsync(long id)
     {
         PaymentDue? paymentDue = await Data.PaymentDues.GetByIdOrDefaultAsync(id);

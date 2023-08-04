@@ -1,6 +1,7 @@
 ﻿using WalletApp.BLL.Dtos.TransactionDtos;
 using WalletApp.BLL.Dtos.UserDtos;
 using WalletApp.Common.Enums;
+using WalletApp.Common.Pagination;
 
 namespace WalletApp.Tests.TestHelpers;
 
@@ -27,6 +28,11 @@ public static class TransactionTestHelper
         };
     }
     
+    public static PagedList<TransactionReadDto> GetTransactionReadDtoPage()
+    {
+        return new PagedList<TransactionReadDto>(GetTransactionReadDtos().ToList(), 3, new PageParameters());
+    }
+
 
     public static IEnumerable<TransactionReadDto> GetTransactionReadDtos()
     {
@@ -40,7 +46,6 @@ public static class TransactionTestHelper
                 IsPending = true,
                 Type = TransactionType.Payment,
                 WasCreated = "Yesterday",
-                IconName = ImageTestHelper.GetImageReadDto().Name,
                 SenderName = UserTestHelper.GetUserReadDto().UserName,
             },
             new()
@@ -51,7 +56,6 @@ public static class TransactionTestHelper
                 IsPending = true,
                 Type = TransactionType.Payment,
                 WasCreated = "Tuesday",
-                IconName = ImageTestHelper.GetImageReadDto().Name,
                 SenderName = UserTestHelper.GetUserReadDto().UserName,
             },
             new()
@@ -62,7 +66,6 @@ public static class TransactionTestHelper
                 IsPending = false,
                 Type = TransactionType.Credit,
                 WasCreated = "Saturday",
-                IconName = ImageTestHelper.GetImageReadDto().Name,
                 SenderName = UserTestHelper.GetUserReadDto().UserName,
             },
         };

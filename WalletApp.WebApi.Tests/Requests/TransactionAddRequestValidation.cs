@@ -17,7 +17,6 @@ internal class TransactionAddRequestValidation
 
         _transactionAddRequest = new TransactionAddRequest()
         {
-            UserId = Guid.NewGuid(),
             Name = "name",
             Description = "description",
             Sum = 1,
@@ -71,14 +70,4 @@ internal class TransactionAddRequestValidation
 
         Assert.That(result.IsValid, Is.False);
     }    
-    
-    [Test]
-    public void Validate_UserIdIsInvalid_ReturnFalse()
-    {
-        _transactionAddRequest.UserId = Guid.Empty;
-
-        ValidationResult result = _validator.Validate(_transactionAddRequest);
-
-        Assert.That(result.IsValid, Is.False);
-    }
 }

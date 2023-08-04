@@ -7,5 +7,4 @@ namespace WalletApp.DAL.Repositories.Interfaces;
 public interface ICardBalanceRepository
 {
     Task<CardBalance?> GetByIdOrDefaultAsync(long id);
-    Task<IEnumerable<CardBalance>> GetAllAsync();
 }

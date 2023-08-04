@@ -5,7 +5,7 @@ namespace WalletApp.DAL.Entities.Identity;
 
 public class AppUser : IdentityUser<Guid>, IEntity<Guid>
 {
-    //// public ICollection<Transaction> Transactions = new List<Transaction>();
+    public ICollection<Transaction> Transactions = new List<Transaction>();
     public CardBalance CardBalance { get; set; } = new();
     public PaymentDue PaymentDue { get; set; } = new();
     public DailyPoint DailyPoint { get; set; } = new();

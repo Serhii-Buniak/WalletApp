@@ -15,19 +15,10 @@ namespace WalletApp.WebApi.Controllers;
 public class TransactionsController : ControllerBase
 {
     private readonly ITransactionService _transactionService;
-    private readonly IMapper _mapper;
 
-    public TransactionsController(ITransactionService transactionService, IMapper mapper)
+    public TransactionsController(ITransactionService transactionService)
     {
         _transactionService = transactionService;
-        _mapper = mapper;
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAllAsync([FromQuery] PageParameters pageParameters)
-    {
-        IEnumerable<TransactionReadDto> transactions = await _transactionService.GetAllAsync(pageParameters);
-        return Ok(transactions);
     }
 
     [HttpGet("{id:long}")]
@@ -42,20 +33,5 @@ public class TransactionsController : ControllerBase
         {
             return NotFound(ErrorResponse.Create(ex));
         }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddAsync([FromForm] TransactionAddRequest request)
-    {
-        var addDto = _mapper.Map<TransactionAddDto>(request);
-
-        if (User.TryGetId(out Guid id))
-        {
-            addDto.SenderId = id;
-        }
-
-        TransactionReadDto transactions = await _transactionService.AddAsync(addDto);
-
-        return Ok(transactions);
     }
 }

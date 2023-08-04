@@ -5,5 +5,4 @@ namespace WalletApp.BLL.Services.Interfaces;
 public interface ICardBalanceService
 {
     Task<CardBalanceReadDto> GetByIdAsync(long id);
-    Task<IEnumerable<CardBalanceReadDto>> GetAllAsync();
 }

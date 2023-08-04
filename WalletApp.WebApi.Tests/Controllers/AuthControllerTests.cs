@@ -118,7 +118,7 @@ internal class AuthControllerTests
     {
         _authSrv
             .Setup(t => t.LogInAsync(It.IsAny<LogInDto>()))
-            .ThrowsAsync(new ValidationModelException());
+            .ThrowsAsync(new AuthException());
 
         IActionResult result = await _controller.LogIn(It.IsAny<LogInDto>());
 

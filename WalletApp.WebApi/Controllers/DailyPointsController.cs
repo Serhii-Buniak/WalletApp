@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WalletApp.BLL.Dtos.DailyPointDtos;
-using WalletApp.BLL.Dtos.PaymentDueDtos;
 using WalletApp.BLL.Services.Interfaces;
 using WalletApp.Common.Exceptions;
 using WalletApp.WebApi.Responses;
@@ -16,13 +15,6 @@ public class DailyPointsController : ControllerBase
     public DailyPointsController(IDailyPointService dailyPointSrv)
     {
         _dailyPointSrv = dailyPointSrv;
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        IEnumerable<DailyPointReadDto> dailyPointReadDtos = await _dailyPointSrv.GetAllAsync();
-        return Ok(dailyPointReadDtos);
     }
 
     [HttpGet("{id:long}")]

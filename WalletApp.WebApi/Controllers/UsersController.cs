@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WalletApp.BLL.Dtos.CardBalanceDtos;
 using WalletApp.BLL.Dtos.DailyPointDtos;
 using WalletApp.BLL.Dtos.PaymentDueDtos;
+using WalletApp.BLL.Dtos.TransactionDtos;
 using WalletApp.BLL.Dtos.UserDtos;
 using WalletApp.BLL.Services.Interfaces;
 using WalletApp.Common.Exceptions;
+using WalletApp.Common.Pagination;
 using WalletApp.WebApi.Extensions;
+using WalletApp.WebApi.Requests;
 using WalletApp.WebApi.Responses;
 
 namespace WalletApp.WebApi.Controllers;
@@ -16,10 +20,14 @@ namespace WalletApp.WebApi.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userSrv;
+    private readonly ITransactionService _transactionSrv;
+    private readonly IMapper _mapper;
 
-    public UsersController(IUserService userService)
+    public UsersController(IUserService userService, ITransactionService transactionService, IMapper mapper)
     {
         _userSrv = userService;
+        _transactionSrv = transactionService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -46,12 +54,48 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetUserPaymentDue(Guid id)
     {
         return await ActionGetUserPaymentDue(id);
-    }    
-    
+    }
+
     [HttpGet("{id:guid}/DailyPoint")]
     public async Task<IActionResult> GetUserDailyPoint(Guid id)
     {
         return await ActionGetUserDailyPoint(id);
+    }
+
+    [HttpGet("{id:guid}/Transactions")]
+    public async Task<IActionResult> GetUserTransactions(Guid id, [FromQuery] PageParameters pageParameters)
+    {
+        return await ActionGetTransactions(id, pageParameters);
+    }
+
+
+    [HttpPost("{id:guid}/Transactions")]
+    public async Task<IActionResult> AddTransaction(Guid id, TransactionAddRequest request)
+    {
+        try
+        {
+            var addDto = _mapper.Map<TransactionAddDto>(request);
+
+            if (User.TryGetId(out Guid authUserId))
+            {
+                addDto.SenderId = authUserId;
+            }
+
+            addDto.UserId = id;
+
+            TransactionReadDto transactionReadDto = await _transactionSrv.AddAsync(addDto);
+
+            return Ok(transactionReadDto);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ErrorResponse.Create(ex));
+        }   
+        catch (TransactionException ex)
+        {
+            return BadRequest(ErrorResponse.Create(ex.Message));
+        }
+  
     }
 
     [HttpGet("Me")]
@@ -97,6 +141,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("Me/DailyPoint")]
+    [Authorize]
     public async Task<IActionResult> GetMeDailyPoint()
     {
         Guid? id = User.GetId();
@@ -109,6 +154,21 @@ public class UsersController : ControllerBase
         return await ActionGetUserDailyPoint(id.Value);
     }
 
+    [HttpGet("Me/Transactions")]
+    [Authorize]
+    public async Task<IActionResult> GetMeTransactions( [FromQuery] PageParameters pageParameters)
+    {
+        Guid? id = User.GetId();
+
+        if (!id.HasValue)
+        {
+            return BadRequest(ErrorResponse.Create("Access token is invalid"));
+        }
+
+        return await ActionGetTransactions(id.Value, pageParameters);
+    }
+
+
     private async Task<IActionResult> ActionGetUserDailyPoint(Guid id)
     {
         try
@@ -120,7 +180,7 @@ public class UsersController : ControllerBase
         {
             return NotFound(ErrorResponse.Create(ex));
         }
-    }    
+    }
 
     private async Task<IActionResult> ActionGetUserPaymentDue(Guid id)
     {
@@ -133,8 +193,8 @@ public class UsersController : ControllerBase
         {
             return NotFound(ErrorResponse.Create(ex));
         }
-    }    
-    
+    }
+
     private async Task<IActionResult> ActionGetUserCardBalance(Guid id)
     {
         try
@@ -147,7 +207,6 @@ public class UsersController : ControllerBase
             return NotFound(ErrorResponse.Create(ex));
         }
     }
-
     private async Task<IActionResult> ActionGetById(Guid id)
     {
         try
@@ -160,4 +219,18 @@ public class UsersController : ControllerBase
             return NotFound(ErrorResponse.Create(ex));
         }
     }
+    private async Task<IActionResult> ActionGetTransactions(Guid id, PageParameters pageParameters)
+    {
+        try
+        {
+            PagedList<TransactionReadDto> transactionReadDtos = await _userSrv.GetTransactionReadDtosPageAsync(id, pageParameters);
+            return Ok(transactionReadDtos);
+
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ErrorResponse.Create(ex));
+        }
+    }
+
 }

@@ -10,5 +10,5 @@ public class DailyPoint : BaseEntity
     public Guid UserId { get; set; }
     public AppUser User { get; set; } = null!;
 
-    public int Count { get; set; }
+    public int Count { get; set; } = new Random().Next(500_000);
 }
