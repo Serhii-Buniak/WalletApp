@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WalletApp.BLL.Dtos.AuthDtos;
 using WalletApp.BLL.Dtos.CardBalanceDtos;
+using WalletApp.BLL.Services.Interfaces;
 using WalletApp.BLL.Services.Realizations;
 using WalletApp.BLL.Settings;
 using WalletApp.Common.Exceptions;
@@ -23,7 +24,7 @@ namespace WalletApp.BLL.Tests.Services;
 
 internal class CardBalanceServiceTests
 {
-    private Mock<IMapper> _mapper;
+    private Mock<IMapperService> _mapper;
     private Mock<IDataWrapper> _dataWrapper;
 
     private CardBalanceService _cardBalanceSrv;
@@ -31,7 +32,7 @@ internal class CardBalanceServiceTests
     [SetUp]
     public void Setup()
     {
-        _mapper = new Mock<IMapper>();
+        _mapper = new Mock<IMapperService>();
         _dataWrapper = new Mock<IDataWrapper>();
 
         _cardBalanceSrv = new CardBalanceService(_dataWrapper.Object, _mapper.Object);

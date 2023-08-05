@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using WalletApp.BLL.Dtos.ImageDtos;
-using WalletApp.BLL.Dtos.PaymentDueDtos;
-using WalletApp.BLL.Dtos.UserDtos;
 using WalletApp.Common.Enums;
 using WalletApp.Common.Mapping;
-using WalletApp.Common.Mapping.ValueConverters;
 using WalletApp.DAL.Entities;
 
 namespace WalletApp.BLL.Dtos.TransactionDtos;
@@ -24,12 +20,10 @@ public class TransactionReadDto : IMapFrom<Transaction>
     {
         profile
             .CreateMap<Transaction, TransactionReadDto>()
-            .ForMember(
-                p => p.WasCreated,
-                s => s.ConvertUsing(new DateTimeToStringConverter(), src => src.CreatedAt)
-            ).AfterMap((src, dest) =>
+            .AfterMap((src, dest) =>
             {
                 dest.SenderName = src.Sender?.UserName;
             });
     }
 }
+

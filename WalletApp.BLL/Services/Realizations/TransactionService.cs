@@ -15,7 +15,7 @@ namespace WalletApp.BLL.Services.Realizations;
 public class TransactionService : BaseEntityService, ITransactionService
 {
 
-    public TransactionService(IDataWrapper dataWrapper, IMapper mapper) : base(dataWrapper, mapper)
+    public TransactionService(IDataWrapper dataWrapper, IMapperService mapper) : base(dataWrapper, mapper)
     {
 
     }
@@ -43,7 +43,7 @@ public class TransactionService : BaseEntityService, ITransactionService
 
         await Data.SaveAsync();
 
-        var transactionReadDto = Mapper.Map<TransactionReadDto>(transaction);
+        var transactionReadDto = Mapper.TransactionEntityToReadDto(transaction);
 
         return transactionReadDto;
     }
@@ -60,7 +60,7 @@ public class TransactionService : BaseEntityService, ITransactionService
             throw new NotFoundException(nameof(Transaction), id);
         }
 
-        var transactionReadDto = Mapper.Map<TransactionReadDto>(transaction);
+        var transactionReadDto = Mapper.TransactionEntityToReadDto(transaction);
 
         return transactionReadDto;
     }

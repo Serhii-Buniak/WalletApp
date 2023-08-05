@@ -9,7 +9,7 @@ namespace WalletApp.BLL.Services.Realizations;
 
 public class PaymentDueService : BaseEntityService, IPaymentDueService
 {
-    public PaymentDueService(IDataWrapper dataWrapper, IMapper mapper) : base(dataWrapper, mapper)
+    public PaymentDueService(IDataWrapper dataWrapper, IMapperService mapper) : base(dataWrapper, mapper)
     {
 
     }

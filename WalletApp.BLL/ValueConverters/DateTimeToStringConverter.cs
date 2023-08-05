@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using System.Globalization;
+using WalletApp.BLL.Services.Interfaces;
+using WalletApp.BLL.Services.Realizations;
 
-namespace WalletApp.Common.Mapping.ValueConverters;
+namespace WalletApp.BLL.ValueConverters;
 
-public sealed class DateTimeToStringConverter : IValueConverter<DateTime, string>
+public sealed class DateTimeToStringConverter 
 {
-    public string Convert(DateTime createdAt, ResolutionContext context)
+    public string Convert(DateTime from, DateTime to)
     {
-        DateTime now = DateTime.UtcNow;
-
-        TimeSpan difference = now - createdAt;
+        TimeSpan difference = to - from;
 
         TimeSpan minuteTimeSpan = TimeSpan.FromMinutes(1); 
         if (difference < minuteTimeSpan)
@@ -38,9 +38,9 @@ public sealed class DateTimeToStringConverter : IValueConverter<DateTime, string
         TimeSpan weekTimeSpan = TimeSpan.FromDays(7); 
         if (twoDaysTimeSpan < difference && difference < weekTimeSpan)
         {
-            return createdAt.ToString("dddd", CultureInfo.GetCultureInfo("en"));
+            return from.ToString("dddd", CultureInfo.GetCultureInfo("en"));
         }
 
-        return createdAt.ToString("d", CultureInfo.GetCultureInfo("en"));
+        return from.ToString("d", CultureInfo.GetCultureInfo("en"));
     }
 }

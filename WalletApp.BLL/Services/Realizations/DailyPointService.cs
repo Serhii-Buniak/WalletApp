@@ -1,19 +1,16 @@
-﻿using AutoMapper;
-using System;
-using WalletApp.BLL.Dtos.DailyPointDtos;
+﻿using WalletApp.BLL.Dtos.DailyPointDtos;
 using WalletApp.BLL.Services.Interfaces;
-using WalletApp.Common.Exceptions;
-using WalletApp.Common.Mapping.ValueConverters;
-using WalletApp.DAL.Entities;
-using WalletApp.DAL.Repositories;
+using WalletApp.BLL.ValueConverters;
 
 namespace WalletApp.BLL.Services.Realizations;
 
 public class DailyPointService : IDailyPointService
 {
-    public DailyPointService()
-    {
+    private readonly IDateTimeService _dateTimeSrv;
 
+    public DailyPointService(IDateTimeService dateTimeService)
+    {
+        _dateTimeSrv = dateTimeService;
     }
 
     public DailyPointReadDto Get()
@@ -29,7 +26,7 @@ public class DailyPointService : IDailyPointService
 
     private double CalculatePoints()
     {
-        DateTime now = DateTime.UtcNow;
+        DateTime now = _dateTimeSrv.Now;
 
         DateTime seasonStart = GetStartsSeasonDate(now);
 
@@ -40,7 +37,7 @@ public class DailyPointService : IDailyPointService
         return points;
     }
 
-    private double GetPoints(int days)
+    private static double GetPoints(int days)
     {
         const double percentTwoDayAgo = 100;
         const double percentOneDayAgo = 60;
@@ -82,7 +79,7 @@ public class DailyPointService : IDailyPointService
         return points;
     }
 
-    private DateTime GetStartsSeasonDate(DateTime dateTime)
+    private static DateTime GetStartsSeasonDate(DateTime dateTime)
     {
         int dateTimeMonth = dateTime.Month;
         int dateTimeYear = dateTime.Year;
@@ -123,7 +120,7 @@ public class DailyPointService : IDailyPointService
         return new DateTime(year, month, 1);
     }
 
-    private int GetDaysCountBetween(DateTime from, DateTime to)
+    private static int GetDaysCountBetween(DateTime from, DateTime to)
     {
         from = new DateTime(from.Year, from.Month, from.Day);
         to = new DateTime(to.Year, to.Month, to.Day);

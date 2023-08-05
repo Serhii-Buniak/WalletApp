@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using NUnit.Framework.Interfaces;
 using WalletApp.BLL.Dtos.CardBalanceDtos;
 using WalletApp.BLL.Dtos.DailyPointDtos;
 using WalletApp.BLL.Dtos.PaymentDueDtos;
@@ -328,7 +329,7 @@ internal class UsersControllerTests
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(transactionReadDtosPage?.Count, Is.EqualTo(TransactionTestHelper.GetTransactionReadDtoPage().Count));
+            Assert.That(transactionReadDtosPage?.Items.Count(), Is.EqualTo(TransactionTestHelper.GetTransactionReadDtoPage().Items.Count()));
         });
     }
 
@@ -372,7 +373,7 @@ internal class UsersControllerTests
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(transactionReadDtosPage?.Count, Is.EqualTo(TransactionTestHelper.GetTransactionReadDtoPage().Count));
+            Assert.That(transactionReadDtosPage?.Items.Count(), Is.EqualTo(TransactionTestHelper.GetTransactionReadDtoPage().Items.Count()));
         });
     }
 

@@ -1,31 +1,26 @@
 ﻿namespace WalletApp.Common.Pagination;
 
-public class PagedList<T> : List<T>
+public class PagedList<T>
 {
     private readonly PageParameters _pageParameters;
 
-    public int CurrentPage { get; }
-    public int PageSize { get; }
+    public int PageNumber => _pageParameters.PageNumber;
+    public int PageSize => _pageParameters.PageSize;
     public int TotalCount { get; }
-
     public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
-    public bool HasPrevious => CurrentPage > 1;
-    public bool HasNext => CurrentPage < TotalPages;
 
-    public PagedList(List<T> items, int count, PageParameters pageParameters)
+    public IEnumerable<T> Items { get; }
+
+    public PagedList(IEnumerable<T> items, int count, PageParameters pageParameters)
     {
         _pageParameters = pageParameters;
-        int pageNumber = pageParameters.PageNumber;
-        int pageSize = pageParameters.PageSize;
 
         TotalCount = count;
-        PageSize = pageSize;
-        CurrentPage = pageNumber;
 
-        AddRange(items);
+        Items = items;
     }
 
-    public PagedList<TOther> Create<TOther>(List<TOther> others)
+    public PagedList<TOther> Create<TOther>(IEnumerable<TOther> others)
     {
         return new PagedList<TOther>(others, TotalCount, _pageParameters);
     }

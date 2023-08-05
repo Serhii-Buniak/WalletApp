@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using System.Globalization;
 
-namespace WalletApp.Common.Mapping.ValueConverters;
+namespace WalletApp.BLL.ValueConverters;
 
 public sealed class DateTimeToStringMonthIValueConverter : IValueConverter<DateTime, string>
 {

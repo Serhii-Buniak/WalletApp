@@ -1,9 +1,15 @@
 ﻿using AutoMapper;
+using WalletApp.BLL.Services.Interfaces;
 
-namespace WalletApp.Common.Mapping.ValueConverters;
+namespace WalletApp.BLL.ValueConverters;
 
 public sealed class DailyPointIntToStringValueConverter : IValueConverter<double, string>
 {
+    public DailyPointIntToStringValueConverter()
+    {
+
+    }
+
     public string Convert(double sourceMember, ResolutionContext context)
     {
         return Convert(sourceMember);

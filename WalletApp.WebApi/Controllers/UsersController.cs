@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
 
     }
 
-    [HttpGet("{id:long}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         return await ActionGetById(id);

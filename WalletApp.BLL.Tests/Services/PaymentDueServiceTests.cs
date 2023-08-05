@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using Moq;
+﻿using Moq;
 using WalletApp.BLL.Dtos.PaymentDueDtos;
+using WalletApp.BLL.Services.Interfaces;
 using WalletApp.BLL.Services.Realizations;
 using WalletApp.Common.Exceptions;
 using WalletApp.DAL.Entities;
@@ -11,7 +11,7 @@ namespace WalletApp.BLL.Tests.Services;
 
 internal class PaymentDueServiceTests
 {
-    private Mock<IMapper> _mapper;
+    private Mock<IMapperService> _mapper;
     private Mock<IDataWrapper> _dataWrapper;
 
     private PaymentDueService _paymentDueSrv;
@@ -19,7 +19,7 @@ internal class PaymentDueServiceTests
     [SetUp]
     public void Setup()
     {
-        _mapper = new Mock<IMapper>();
+        _mapper = new Mock<IMapperService>();
         _dataWrapper = new Mock<IDataWrapper>();
 
         _paymentDueSrv = new PaymentDueService(_dataWrapper.Object, _mapper.Object);

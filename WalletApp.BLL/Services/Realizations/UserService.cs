@@ -16,7 +16,7 @@ namespace WalletApp.BLL.Services.Realizations;
 
 public class UserService : BaseEntityService, IUserService
 {
-    public UserService(IDataWrapper dataWrapper, IMapper mapper) : base(dataWrapper, mapper)
+    public UserService(IDataWrapper dataWrapper, IMapperService mapper) : base(dataWrapper, mapper)
     {
     }
 
@@ -90,12 +90,12 @@ public class UserService : BaseEntityService, IUserService
              include: x => x.Include(t => t.User)
                             .Include(t => t.Sender!));
 
-        if (transactionsPage.CurrentPage > transactionsPage.TotalPages)
+        if (transactionsPage.PageNumber > transactionsPage.TotalPages)
         {
-            throw new NotFoundException(nameof(PagedList<Transaction>), transactionsPage.CurrentPage);
+            throw new NotFoundException(nameof(PagedList<Transaction>), transactionsPage.PageNumber);
         }
 
-        var transactionReadDtos = Mapper.Map<List<TransactionReadDto>>(transactionsPage);
+        var transactionReadDtos = Mapper.TransactionsEntityToReadDtos(transactionsPage.Items);
 
         var transactionReadDtosPage = transactionsPage.Create(transactionReadDtos);
 

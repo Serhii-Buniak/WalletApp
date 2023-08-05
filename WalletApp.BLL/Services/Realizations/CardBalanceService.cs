@@ -10,7 +10,7 @@ namespace WalletApp.BLL.Services.Realizations;
 
 public class CardBalanceService : BaseEntityService, ICardBalanceService
 {
-    public CardBalanceService(IDataWrapper dataWrapper, IMapper mapper) : base(dataWrapper, mapper)
+    public CardBalanceService(IDataWrapper dataWrapper, IMapperService mapper) : base(dataWrapper, mapper)
     {
 
     }

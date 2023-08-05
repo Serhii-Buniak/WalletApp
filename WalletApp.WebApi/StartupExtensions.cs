@@ -27,6 +27,9 @@ public static class StartupExtensions
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAuthService, AuthService>();
 
+        services.AddSingleton<IDateTimeService, DateTimeService>();
+        services.AddSingleton<IMapperService, MapperService>();
+
         return services;
     }        
     

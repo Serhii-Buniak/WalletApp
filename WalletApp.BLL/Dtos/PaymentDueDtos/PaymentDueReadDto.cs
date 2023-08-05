@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using WalletApp.BLL.ValueConverters;
 using WalletApp.Common.Mapping;
-using WalletApp.Common.Mapping.ValueConverters;
 using WalletApp.DAL.Entities;
 
 namespace WalletApp.BLL.Dtos.PaymentDueDtos;
