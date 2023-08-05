@@ -10,19 +10,8 @@ public static class DailyPointTestHelper
     {
         return new DailyPointReadDto
         {
-            Id = 1,
             Count = 2600,
             DisplayCount = "3K"
         };
     }   
-    
-    public static DailyPoint GetDailyPoint()
-    {
-        return new DailyPoint()
-        {
-            Id = 1,
-            User = UserTestHelper.GetUser(),
-            Count = 2600,
-        };
-    }
 }

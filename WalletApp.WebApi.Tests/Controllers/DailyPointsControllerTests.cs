@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WalletApp.BLL.Dtos.CardBalanceDtos;
 using WalletApp.BLL.Dtos.DailyPointDtos;
+using WalletApp.BLL.Dtos.PaymentDueDtos;
 using WalletApp.BLL.Services.Interfaces;
 using WalletApp.Common.Exceptions;
 using WalletApp.Tests.Helpers;
@@ -28,13 +29,13 @@ internal class DailyPointsControllerTests
     }
 
     [Test]
-    public async Task GetById_Success_ReturnOkObjectResult()
+    public void Get_Success_ReturnOkObjectResult()
     {
         _dailyPointSrv
-            .Setup(t => t.GetByIdAsync(It.IsAny<long>()))
-            .ReturnsAsync(DailyPointTestHelper.GetDailyPointReadDto());
+            .Setup(t => t.Get())
+            .Returns(DailyPointTestHelper.GetDailyPointReadDto());
 
-        IActionResult result = await _controller.GetById(It.IsAny<long>());
+        IActionResult result = _controller.Get();
 
         var okObjectResult = result as OkObjectResult;
 
@@ -43,28 +44,7 @@ internal class DailyPointsControllerTests
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(dailyPointReadDto?.Id, Is.EqualTo(DailyPointTestHelper.GetDailyPointReadDto().Id));
+            Assert.That(dailyPointReadDto, Is.EqualTo(DailyPointTestHelper.GetDailyPointReadDto()));
         });
     }
-
-    [Test]
-    public async Task GetById_NotFoundException_ReturnNotFoundObjectResult()
-    {
-        _dailyPointSrv
-            .Setup(t => t.GetByIdAsync(It.IsAny<long>()))
-            .ThrowsAsync(new NotFoundException("ex message"));
-
-        IActionResult result = await _controller.GetById(It.IsAny<long>());
-
-        var notFoundObjectResult = result as NotFoundObjectResult;
-
-        var errorResponse = notFoundObjectResult?.Value as ErrorResponse;
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
-            Assert.That(errorResponse?.Error, Is.EqualTo("ex message"));
-        });
-    }
-
 }

@@ -3,40 +3,38 @@ using System;
 using WalletApp.BLL.Dtos.DailyPointDtos;
 using WalletApp.BLL.Services.Interfaces;
 using WalletApp.Common.Exceptions;
+using WalletApp.Common.Mapping.ValueConverters;
 using WalletApp.DAL.Entities;
 using WalletApp.DAL.Repositories;
 
 namespace WalletApp.BLL.Services.Realizations;
 
-public class DailyPointService : BaseEntityService, IDailyPointService
+public class DailyPointService : IDailyPointService
 {
-    public DailyPointService(IDataWrapper dataWrapper, IMapper mapper) : base(dataWrapper, mapper)
+    public DailyPointService()
     {
 
     }
 
-    public async Task<DailyPointReadDto> GetByIdAsync(long id)
+    public DailyPointReadDto Get()
     {
-        DailyPoint? dailyPoint = await Data.DailyPoints.GetByIdOrDefaultAsync(id);
+        double points = CalculatePoints();
 
-        if (dailyPoint == null)
+        return new DailyPointReadDto()
         {
-            throw new NotFoundException(nameof(DailyPoint), id);
-        }
-
-        var dailyPointReadDto = Mapper.Map<DailyPointReadDto>(dailyPoint);
-
-        return dailyPointReadDto;
+            Count = points,
+            DisplayCount = new DailyPointIntToStringValueConverter().Convert(points)
+        };
     }
 
-    public double Calculate()
+    private double CalculatePoints()
     {
         DateTime now = DateTime.UtcNow;
 
         DateTime seasonStart = GetStartsSeasonDate(now);
 
         int totalDays = GetDaysCountBetween(seasonStart, now);
-        
+
         double points = GetPoints(totalDays);
 
         return points;

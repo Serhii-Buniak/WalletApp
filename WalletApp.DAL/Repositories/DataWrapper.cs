@@ -11,7 +11,6 @@ public class DataWrapper : IDataWrapper, IDisposable
     private ICardBalanceRepository? _cardBalanceRepository;
     private IUsersRepository? _usersRepository;
     private IPaymentDueRepository? _paymentDueRepository;
-    private IDailyPointRepository? _dailyPointRepository;
 
     public DataWrapper(AppDbContext context)
     {
@@ -51,15 +50,6 @@ public class DataWrapper : IDataWrapper, IDisposable
         {
             _paymentDueRepository ??= new PaymentDueRepository(Context);
             return _paymentDueRepository;
-        }
-    }
-
-    public IDailyPointRepository DailyPoints
-    {
-        get
-        {
-            _dailyPointRepository ??= new DailyPointRepository(Context);
-            return _dailyPointRepository;
         }
     }
 

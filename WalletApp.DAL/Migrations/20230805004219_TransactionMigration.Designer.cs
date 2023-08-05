@@ -12,8 +12,8 @@ using WalletApp.DAL;
 namespace WalletApp.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230803171722_DailyPointMigration")]
-    partial class DailyPointMigration
+    [Migration("20230805004219_TransactionMigration")]
+    partial class TransactionMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,31 +153,6 @@ namespace WalletApp.DAL.Migrations
                     b.ToTable("CardBalances");
                 });
 
-            modelBuilder.Entity("WalletApp.DAL.Entities.DailyPoint", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("DailyPoints");
-                });
-
             modelBuilder.Entity("WalletApp.DAL.Entities.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -295,6 +270,49 @@ namespace WalletApp.DAL.Migrations
                     b.ToTable("PaymentDues");
                 });
 
+            modelBuilder.Entity("WalletApp.DAL.Entities.Transaction", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsPending")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("WalletApp.DAL.Entities.Identity.AppRole", null)
@@ -357,17 +375,6 @@ namespace WalletApp.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WalletApp.DAL.Entities.DailyPoint", b =>
-                {
-                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
-                        .WithOne("DailyPoint")
-                        .HasForeignKey("WalletApp.DAL.Entities.DailyPoint", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("WalletApp.DAL.Entities.PaymentDue", b =>
                 {
                     b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
@@ -379,12 +386,26 @@ namespace WalletApp.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WalletApp.DAL.Entities.Transaction", b =>
+                {
+                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
+
+                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WalletApp.DAL.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("CardBalance")
-                        .IsRequired();
-
-                    b.Navigation("DailyPoint")
                         .IsRequired();
 
                     b.Navigation("PaymentDue")

@@ -150,31 +150,6 @@ namespace WalletApp.DAL.Migrations
                     b.ToTable("CardBalances");
                 });
 
-            modelBuilder.Entity("WalletApp.DAL.Entities.DailyPoint", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("DailyPoints");
-                });
-
             modelBuilder.Entity("WalletApp.DAL.Entities.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -397,17 +372,6 @@ namespace WalletApp.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WalletApp.DAL.Entities.DailyPoint", b =>
-                {
-                    b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
-                        .WithOne("DailyPoint")
-                        .HasForeignKey("WalletApp.DAL.Entities.DailyPoint", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("WalletApp.DAL.Entities.PaymentDue", b =>
                 {
                     b.HasOne("WalletApp.DAL.Entities.Identity.AppUser", "User")
@@ -439,9 +403,6 @@ namespace WalletApp.DAL.Migrations
             modelBuilder.Entity("WalletApp.DAL.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("CardBalance")
-                        .IsRequired();
-
-                    b.Navigation("DailyPoint")
                         .IsRequired();
 
                     b.Navigation("PaymentDue")

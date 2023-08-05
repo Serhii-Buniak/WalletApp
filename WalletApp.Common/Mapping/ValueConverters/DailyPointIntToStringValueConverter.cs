@@ -2,16 +2,23 @@
 
 namespace WalletApp.Common.Mapping.ValueConverters;
 
-public sealed class DailyPointIntToStringValueConverter : IValueConverter<int, string>
+public sealed class DailyPointIntToStringValueConverter : IValueConverter<double, string>
 {
-    public string Convert(int sourceMember, ResolutionContext context)
+    public string Convert(double sourceMember, ResolutionContext context)
     {
+        return Convert(sourceMember);
+    }   
+    
+    public string Convert(double sourceMember)
+    {
+        sourceMember = Math.Round(sourceMember);
+
         if (1000 > sourceMember)
         {
             return sourceMember.ToString();
         }
 
-        double thousandCount = Math.Round((double)sourceMember / 1000);
+        double thousandCount = Math.Round(sourceMember / 1000);
 
         return thousandCount + "K";
     }

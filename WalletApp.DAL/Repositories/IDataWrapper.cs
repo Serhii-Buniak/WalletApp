@@ -9,7 +9,6 @@ public interface IDataWrapper
     ICardBalanceRepository CardBalances { get; }
     IUsersRepository Users { get; }
     IPaymentDueRepository PaymentDues { get; }
-    IDailyPointRepository DailyPoints { get; }
 
     int Save();
     Task<int> SaveAsync();

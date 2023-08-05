@@ -56,12 +56,6 @@ public class UsersController : ControllerBase
         return await ActionGetUserPaymentDue(id);
     }
 
-    [HttpGet("{id:guid}/DailyPoint")]
-    public async Task<IActionResult> GetUserDailyPoint(Guid id)
-    {
-        return await ActionGetUserDailyPoint(id);
-    }
-
     [HttpGet("{id:guid}/Transactions")]
     public async Task<IActionResult> GetUserTransactions(Guid id, [FromQuery] PageParameters pageParameters)
     {
@@ -140,20 +134,6 @@ public class UsersController : ControllerBase
         return await ActionGetUserPaymentDue(id.Value);
     }
 
-    [HttpGet("Me/DailyPoint")]
-    [Authorize]
-    public async Task<IActionResult> GetMeDailyPoint()
-    {
-        Guid? id = User.GetId();
-
-        if (!id.HasValue)
-        {
-            return BadRequest(ErrorResponse.Create("Access token is invalid"));
-        }
-
-        return await ActionGetUserDailyPoint(id.Value);
-    }
-
     [HttpGet("Me/Transactions")]
     [Authorize]
     public async Task<IActionResult> GetMeTransactions( [FromQuery] PageParameters pageParameters)
@@ -166,20 +146,6 @@ public class UsersController : ControllerBase
         }
 
         return await ActionGetTransactions(id.Value, pageParameters);
-    }
-
-
-    private async Task<IActionResult> ActionGetUserDailyPoint(Guid id)
-    {
-        try
-        {
-            DailyPointReadDto dailyPointReadDto = await _userSrv.GetDailyPointReadDtoAsync(id);
-            return Ok(dailyPointReadDto);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ErrorResponse.Create(ex));
-        }
     }
 
     private async Task<IActionResult> ActionGetUserPaymentDue(Guid id)

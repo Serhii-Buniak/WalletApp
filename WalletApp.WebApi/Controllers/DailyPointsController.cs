@@ -17,17 +17,9 @@ public class DailyPointsController : ControllerBase
         _dailyPointSrv = dailyPointSrv;
     }
 
-    [HttpGet("{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [HttpGet("Calculeted")]
+    public IActionResult Get()
     {
-        try
-        {
-            DailyPointReadDto dailyPointReadDto = await _dailyPointSrv.GetByIdAsync(id);
-            return Ok(dailyPointReadDto);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ErrorResponse.Create(ex));
-        }
+        return Ok(_dailyPointSrv.Get());
     }
 }

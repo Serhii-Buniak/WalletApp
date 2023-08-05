@@ -75,22 +75,6 @@ public class UserService : BaseEntityService, IUserService
         return paymentDueReadDto;
     }
 
-    public async Task<DailyPointReadDto> GetDailyPointReadDtoAsync(Guid userId)
-    {
-        AppUser? appUser = await Data.Users.GetByIdOrDefaultAsync(userId,
-                 include: i => i.Include(user => user.DailyPoint)
-             );
-
-        if (appUser == null)
-        {
-            throw new NotFoundException(nameof(AppUser), userId);
-        }
-
-        var dailyPointReadDto = Mapper.Map<DailyPointReadDto>(appUser.DailyPoint);
-
-        return dailyPointReadDto;
-    }
-
     public async Task<PagedList<TransactionReadDto>> GetTransactionReadDtosPageAsync(Guid userId, PageParameters pageParameters)
     {
         bool exist = await Data.Users.ContainsByIdAsync(userId);

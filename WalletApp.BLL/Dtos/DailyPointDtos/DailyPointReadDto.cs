@@ -8,20 +8,8 @@ using WalletApp.DAL.Entities.Identity;
 
 namespace WalletApp.BLL.Dtos.DailyPointDtos;
 
-public class DailyPointReadDto : IMapFrom<DailyPoint>
+public record class DailyPointReadDto 
 {
-    public long Id { get; set; }
-
-    public int Count { get; set; }
+    public double Count { get; set; }
     public string DisplayCount { get; set; } = null!;
-
-    void IMapFrom<DailyPoint>.Mapping(Profile profile)
-    {
-        profile
-            .CreateMap<DailyPoint, DailyPointReadDto>()
-            .ForMember(
-                p => p.DisplayCount,
-                s => s.ConvertUsing(new DailyPointIntToStringValueConverter(), src => src.Count)
-            );
-    }
 }

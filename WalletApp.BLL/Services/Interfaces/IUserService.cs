@@ -12,7 +12,6 @@ public interface IUserService
     Task<IEnumerable<UserReadDto>> GetAllAsync();
     Task<UserReadDto> GetByIdAsync(Guid id);
     Task<CardBalanceReadDto> GetCardBalanceReadDtoAsync(Guid userId);
-    Task<DailyPointReadDto> GetDailyPointReadDtoAsync(Guid userId);
     Task<PaymentDueReadDto> GetPaymentDueReadDtoAsync(Guid userId);
     Task<PagedList<TransactionReadDto>> GetTransactionReadDtosPageAsync(Guid userId, PageParameters pageParameters);
 }  
