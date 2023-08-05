@@ -56,4 +56,13 @@ internal class DailyPointServiceTests
 
         Assert.ThrowsAsync<NotFoundException>(async () => await getById());
     }
+
+
+    [Test]
+    public void Calculate_Success_GetDaylyPoints()
+    {
+        var a = _dailyPointSrv.Calculate();
+
+        Assert.Pass();
+    }
 }
